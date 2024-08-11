@@ -1,0 +1,177 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/style.css' %}">  
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    {% if debug %}
+<script src="{% static 'django_browser_reload/browser_reload.js' %}"></script>
+{% endif %}
+
+    <title>alcherwebops</title>
+</head>
+<body>
+    <div class="wrapper">
+        <header class="header">
+            <div class="header-left">
+                <i id="menu" class="fa-solid fa-bars" style="color: white;"></i>&nbsp; &nbsp;<a href="#" class="home-link"><i class="fa-solid fa-house"></i>&nbsp; &nbsp;Home</a>
+            </div>
+            <div class="header-right">
+                <img src="{% static 'myapp/images/yo1.png' %}" alt="User Image" class="user-image">
+                <span class="username" style="font-family:Georgia, 'Times New Roman', Times, serif ;">Username</span>
+            </div>
+        </header>
+
+        <div class="main">
+            <div id="sidebar" class="sidebar">
+                <ul>
+                    <li><button id="newitem"><i class="fa-solid fa-plus"></i>&nbsp; New Item</button></li>
+                    <hr class="hr">
+                    <li><div class="sideitems" data-target="dashboard-dropdown">
+                        <div class="name">
+                            <i class="fa-solid fa-bars"></i>&nbsp; &nbsp; Dashboard
+                        </div>
+                        <div class="arrow" id="arrow">
+                            <i class="fa-solid fa-caret-down"></i>
+                        </div>
+                    </div>
+                    <ul class="dropdown" id="dashboard-dropdown">
+                        <li><a href="#">Commerce</a></li>
+                        <li><a href="#">Analytics</a></li>
+                        <li><a href="#">Crypto</a></li>
+                        <li><a href="#">Helpdesk</a></li>
+                        <li><a href="#">Monitoring</a></li>
+                        <li><a href="#">Fitness</a></li>
+                    </ul>
+                </li>
+                <hr class="hr">
+                    <li><div class="sideitems" data-target="applications-dropdown">
+                        <div class="name">
+                            <i class="fa-solid fa-bars"></i>&nbsp; &nbsp; Applications
+                        </div>
+                        <div class="arrow">
+                            <i class="fa-solid fa-caret-down"></i>
+                        </div>
+                    </div>
+                    <ul class="dropdown" id="applications-dropdown">
+                        <li><a href="#">Applications Item 1</a></li>
+                        <li><a href="#">Applications Item 2</a></li>
+                    </ul>
+                </li>
+                <hr class="hr">
+                    <li><div class="sideitems" data-target="elements-dropdown">
+                        <div class="name">
+                            <i class="fa-solid fa-bars"></i>&nbsp; &nbsp; Elements
+                        </div>
+                        <div class="arrow">
+                            <i class="fa-solid fa-caret-down"></i>
+                        </div>
+                    </div>
+                    <ul class="dropdown" id="elements-dropdown">
+                        <li><a href="#">Elements Item 1</a></li>
+                        <li><a href="#">Elements Item 2</a></li>
+                    </ul>
+                </li>
+                <hr class="hr">
+                </ul>
+            </div>
+          
+            <div class="content" id="content">
+            <div class="topcontainer">
+                <div class="welcome">
+                    Welcome
+                </div>
+                <div class="image-container">
+                    <img src="{% static 'myapp/images/yo1.png' %}" alt="" class="bigimage">
+                    <div class="bigusername">Username</div>
+                </div>
+                <br>
+                <br>
+                <div class="initext">
+                    Form title
+                    <br>
+                    <div class="nextinitext">
+                        hdhgevgvhgvhwgevdhgvdhgqvhvdhcsgfscg
+                    </div>
+                    <div class="alert" style="  border:solid 1px;">
+                    {% if messages %}
+{% for message in messages %} <div class="alert alert-{{ message.tags }}">
+{{ message }}
+</div> {% endfor %}
+{% endif %}
+</div>
+                </div>
+            </div>
+                <div class="table-wrapper">
+                    <table id="userTable" style="border-radius: 10px;">
+                        <thead>
+                            <tr style="background-color: hwb(0 65% 33%); font-size: 20px; text-align: left; ">
+                                <th id="fullname">Full Name</th>
+                                <th>Username</th>
+                                <th>Email ID</th>
+                                <th id="actions">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for user in users %}
+                            <tr>
+                                <td>{{ user.full_name }}</td>
+                                <td>{{ user.username }}</td>
+                                <td>{{ user.email }}</td>
+                                <td>
+                                    <form action="{% url 'edit_user' user.pk %}" method="get" style="display:inline;">
+                                        <button type="submit" class="edit"><i class="fa-regular fa-floppy-disk"></i>&nbsp; Edit</button>
+                                    </form>
+                                    <form action="{% url 'delete_user' user.pk %}" method="post" style="display:inline;">
+                                        {% csrf_token %}
+                                        <button type="submit" class="delete"><i class="fa-regular fa-trash-alt"></i>&nbsp; Delete</button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <button id="adduser" class="adduser">+ Add User</button>
+
+
+
+            
+        </div>
+        <div id="addUserModal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <div class="addmember">Add Member</div>
+                <form id="addUserForm" method="POST">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="fullName" style:" font: .3em;">Full Name</label><br>
+                        <input type="text" id="fullName" name="full_name" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="username">Username</label><br>
+                        <input type="text" id="username" name="username" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label><br>
+                        <input type="email" id="email" name="email" class="form-control" required>
+                    </div>
+                    <div class="aub">
+                    <button type="button" class="btn btn-secondary" id="cancelBtn">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Confirm</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+
+    </div>
+    
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+<script src="{% static 'myapp/js/script.js' %}"></script>
+</body>
+</html>
